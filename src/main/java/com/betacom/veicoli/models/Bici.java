@@ -1,10 +1,16 @@
 package com.betacom.veicoli.models;
 
+import com.betacom.veicoli.models.tipi.TipoFreno;
+import com.betacom.veicoli.models.tipi.TipoSospensione;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
@@ -31,8 +37,12 @@ public class Bici extends Veicolo {
 	@Column(nullable = false)
 	private Boolean pieghevole;
 	
-	private Integer tipoFrenoId;
+	@ManyToOne
+	@JoinColumn(name = "tipo_freno_id", foreignKey = @ForeignKey(name ="fk_bici_tipo_freno" ))
+	private TipoFreno tipoFreno;
 	
-	private Integer tipoSospensione;
+	@ManyToOne
+	@JoinColumn(name = "tipo_sosponsione_id", foreignKey = @ForeignKey(name ="fk_bici_tipo_sospensione" ))
+	private TipoSospensione tipoSospensione;
 	
 }

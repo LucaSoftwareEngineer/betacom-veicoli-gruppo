@@ -31,10 +31,9 @@ public class TipoFreno {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "tip_fre_id")
 	private Integer id;
 	
-	@Column(name = "tip_fre_descrizione", nullable = false)
+	@Column(nullable = false)
 	private String descrizione;
 	
 	@OneToMany(mappedBy = "tipoFreno", fetch = FetchType.EAGER)

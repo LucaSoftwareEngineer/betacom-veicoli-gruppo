@@ -27,10 +27,9 @@ public class TipoVeicolo {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "tip_vei_id")
 	private Integer id;
 	
-	@Column(name = "tip_vei_descrizione", nullable = false)
+	@Column(nullable = false)
 	private String descrizione;
 	
 	@OneToMany(mappedBy = "tipoVeicolo", fetch = FetchType.EAGER)
