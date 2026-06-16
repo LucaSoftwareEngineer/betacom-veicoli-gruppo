@@ -1,6 +1,6 @@
 package com.betacom.veicoli.models;
 
-import java.time.LocalDate;
+import java.time.Year;
 
 import com.betacom.veicoli.models.tipi.Categoria;
 import com.betacom.veicoli.models.tipi.TipoAlimentazione;
@@ -36,7 +36,7 @@ public class Veicolo {
     private Integer id;
 	
 	@Column(nullable = false)
-	private LocalDate annoProduzione;
+	private Year annoProduzione;
 	
 	@Column(nullable = false)
 	private Short numeroRuote;
