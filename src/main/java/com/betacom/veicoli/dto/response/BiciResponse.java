@@ -1,5 +1,7 @@
 package com.betacom.veicoli.dto.response;
 
+import java.time.Year;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,17 +14,17 @@ import lombok.Setter;
 public class BiciResponse {
 
 	private Integer id;
-	private Integer numeroMarce;
+	private Short numeroMarce;
 	private Integer tipoFrenoId;
 	private Integer tipoSospensioneId;
 	private Boolean pieghevole;
 	private Integer tipoVeicoloId;
-	private Integer numeroRuote;
+	private Short numeroRuote;
 	private Integer tipoAlimentazioneId;
 	private Integer categoriaId;
 	private String colore;
 	private String marca;
-	private Integer annoProduzione;
+	private Year annoProduzione;
 	private String modello;
 	
 }

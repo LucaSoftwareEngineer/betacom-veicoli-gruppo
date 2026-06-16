@@ -1,5 +1,7 @@
 package com.betacom.veicoli.dto.response;
 
+import java.time.Year;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,14 +15,14 @@ public class MotoResponse {
 
 	private Integer id;
 	private String targa;
-	private Integer cilindrata;
+	private Short cilindrata;
 	private Integer tipoVeicoloId;
-	private Integer numeroRuote;
+	private Short numeroRuote;
 	private Integer tipoAlimentazioneId;
 	private Integer categoriaId;
 	private String colore;
 	private String marca;
-	private Integer annoProduzione;
+	private Year annoProduzione;
 	private String modello;
 	
 }
