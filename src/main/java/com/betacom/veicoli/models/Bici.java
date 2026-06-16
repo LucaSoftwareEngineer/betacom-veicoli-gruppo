@@ -6,9 +6,6 @@ import com.betacom.veicoli.models.tipi.TipoSospensione;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
@@ -25,11 +22,6 @@ import lombok.ToString;
 @PrimaryKeyJoinColumn(name = "veicolo_id")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true) @ToString
 public class Bici extends Veicolo {
-
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
-    private Integer id;
 	
 	@Column(nullable = false)
 	private Short numeroMarce;
