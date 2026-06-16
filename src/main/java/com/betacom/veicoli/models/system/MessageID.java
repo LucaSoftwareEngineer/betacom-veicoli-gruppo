@@ -21,6 +21,6 @@ public class MessageID {
 	@Column(length = 4)
 	private String lang;
 	
-	@Column(length = 20)
+	@Column(length = 50)
 	private String cod;
 }
