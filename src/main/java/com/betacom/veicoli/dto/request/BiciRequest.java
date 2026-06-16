@@ -17,7 +17,6 @@ import lombok.Setter;
 @Setter
 public class BiciRequest {
 
-
 	@NotNull(groups = ValidationGroups.Create.class, message = "bici.num.marce.null")
 	@NotBlank(groups = ValidationGroups.Create.class, message = "bici.num.marce.null")
 	private Short numeroMarce;
