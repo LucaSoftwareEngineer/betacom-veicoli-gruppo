@@ -23,7 +23,7 @@ public class Macchina extends Veicolo {
 	@Column(nullable = false)
 	private Short numeroPorte;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String targa;
 
 }

@@ -20,7 +20,7 @@ public class Moto extends Veicolo {
 	@Column(nullable = false)
 	private Short cilindrata;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String targa;
 	
 }
