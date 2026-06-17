@@ -1,4 +1,4 @@
-package com.betacom.veicoli.controller;
+package com.betacom.veicoli.controllers;
 
 import java.util.List;
 
