@@ -7,5 +7,7 @@ import com.betacom.veicoli.models.Macchina;
 
 @Repository
 public interface MacchinaRepository extends JpaRepository<Macchina, Integer> {
+	
+	boolean existsByTarga(String targa);
 
 }

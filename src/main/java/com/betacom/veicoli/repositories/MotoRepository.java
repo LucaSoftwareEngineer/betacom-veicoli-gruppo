@@ -7,6 +7,8 @@ import com.betacom.veicoli.models.Moto;
 
 @Repository
 public interface MotoRepository extends JpaRepository<Moto, Integer> {
+
+	boolean existsByTarga(String targa);
 	
 
 }
