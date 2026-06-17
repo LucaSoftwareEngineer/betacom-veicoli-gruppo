@@ -4,6 +4,8 @@ import java.time.Year;
 
 import com.betacom.veicoli.exceptions.ValidationGroups;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -20,22 +22,26 @@ public class BiciRequest {
 
 	@NotNull(groups = ValidationGroups.Create.class, message = "bici.num.marce.null")
 	@NotBlank(groups = ValidationGroups.Create.class, message = "bici.num.marce.null")
+	@Min(value = 1 ,groups = ValidationGroups.Create.class, message = "bici.num.marce.invalid")
+	@Max(value = 3,groups = ValidationGroups.Create.class, message = "bici.num.marce.invalid")
 	private Short numeroMarce;
 	
 	@NotNull(groups = ValidationGroups.Create.class, message = "bici.tipo.freno.null")
 	@NotBlank(groups = ValidationGroups.Create.class, message = "bici.tipo.freno.null")
+
 	private Integer tipoFrenoId;
 	
 	@NotNull(groups = ValidationGroups.Create.class, message = "bici.tipo.sospensione.null")
 	@NotBlank(groups = ValidationGroups.Create.class, message = "bici.tipo.sospensione.null")
+
 	private Integer tipoSospensioneId;
 	
 	@NotNull(groups = ValidationGroups.Create.class, message = "bici.pieghevole.null")
 	@NotBlank(groups = ValidationGroups.Create.class, message = "bici.pieghevole.null")
 	private Boolean pieghevole;
 	
-	@NotNull(groups = ValidationGroups.Create.class, message = "veicolo.tipo.null ")
-	@NotBlank(groups = ValidationGroups.Create.class, message = "veicolo.tipo.null ")
+	@NotNull(groups = ValidationGroups.Create.class, message = "veicolo.tipo.null")
+	@NotBlank(groups = ValidationGroups.Create.class, message = "veicolo.tipo.null")
 	private Integer tipoVeicoloId;
 	
 	@NotNull(groups = ValidationGroups.Create.class, message = "veicolo.num.ruote.null")
