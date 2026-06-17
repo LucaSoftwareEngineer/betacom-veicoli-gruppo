@@ -20,8 +20,10 @@ import com.betacom.veicoli.repositories.TipoVeicoloRepository;
 import com.betacom.veicoli.services.interfaces.IMacchinaServices;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class MacchinaImpl implements IMacchinaServices{
 	
@@ -47,18 +49,20 @@ public class MacchinaImpl implements IMacchinaServices{
 		if(!categoriaRepository.existsById(req.getCategoriaId()))
 			throw new VeicoliException("veicolo.categoria.invalid");
 		
-		if(req.getAnnoProduzione().isBefore(Year.of(2006)))
+		if(req.getAnnoProduzione().isBefore(Year.of(2006)) || req.getAnnoProduzione().isAfter(Year.now()))
 			throw new VeicoliException("veicolo.anno.invalid");
 			
 		Macchina macchina = modelMapper.map(req, Macchina.class);
+		macchina.setId(null);
 		macchinaRepository.save(macchina);
+		
 		
 		return modelMapper.map(macchina, MacchinaResponse.class);
 	}
 
 	@Transactional
 	@Override
-	public MacchinaResponse update(Integer id, MacchinaRequest req) throws VeicoliException{
+	public MacchinaResponse update(MacchinaRequest req, Integer id) throws VeicoliException{
 		
 		Macchina macchina = macchinaRepository.findById(id)
 				.orElseThrow(() -> new VeicoliException("veicolo.id.invalid"));
@@ -160,6 +164,7 @@ public class MacchinaImpl implements IMacchinaServices{
 		return modelMapper.map(macchina, MacchinaResponse.class);
 	}
 
+	@Transactional
 	@Override
 	public ResponseDTO remove(Integer id) throws VeicoliException{
 		Macchina macchina = macchinaRepository.findById(id)

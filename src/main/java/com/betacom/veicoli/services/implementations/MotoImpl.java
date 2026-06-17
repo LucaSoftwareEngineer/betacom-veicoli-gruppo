@@ -51,6 +51,7 @@ public class MotoImpl implements IMotoServices {
 			throw new VeicoliException("veicolo.anno.invalid");
 		
 		Moto moto = modelMapper.map(req, Moto.class);
+		moto.setId(null);
 		motoRepository.save(moto);
 		
 		return modelMapper.map(moto, MotoResponse.class);

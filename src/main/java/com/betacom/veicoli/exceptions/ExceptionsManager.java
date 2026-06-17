@@ -17,7 +17,7 @@ public class ExceptionsManager {
 
 	private final IMessaggiServices messaggiServices;
 
-	@ExceptionHandler(exception = Exception.class)
+	@ExceptionHandler(exception = VeicoliException.class)
 	public ResponseEntity<ResponseDTO> handleException(Exception e) {
 		return ResponseEntity.badRequest()
 				.body(ResponseDTO.builder().msg(messaggiServices.get(e.getMessage())).build());
