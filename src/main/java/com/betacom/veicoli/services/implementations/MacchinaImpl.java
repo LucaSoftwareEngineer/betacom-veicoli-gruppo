@@ -160,6 +160,7 @@ public class MacchinaImpl implements IMacchinaServices{
 		return modelMapper.map(macchina, MacchinaResponse.class);
 	}
 
+	@Transactional
 	@Override
 	public ResponseDTO remove(Integer id) throws VeicoliException{
 		Macchina macchina = macchinaRepository.findById(id)

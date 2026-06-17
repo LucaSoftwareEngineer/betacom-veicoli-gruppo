@@ -60,6 +60,7 @@ public class BiciImpl implements IBiciServices {
 			throw new VeicoliException("bici.tipo.freno.invalid");
 		
 		Bici bici = modelMapper.map(request, Bici.class);
+		bici.setId(null);
 		biciRepository.save(bici);
 		
 		return modelMapper.map(bici, BiciResponse.class);
@@ -172,7 +173,7 @@ public class BiciImpl implements IBiciServices {
 	 */
 	@Override
 	public BiciResponse getById(Integer id) throws VeicoliException {
-		Bici bici = biciRepository.findById(id).orElseThrow(() -> new VeicoliException(""));
+		Bici bici = biciRepository.findById(id).orElseThrow(() -> new VeicoliException("bici.not.found"));
 		return modelMapper.map(bici, BiciResponse.class);
 	}
 
