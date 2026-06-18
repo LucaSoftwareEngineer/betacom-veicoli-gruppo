@@ -14,6 +14,7 @@ import com.betacom.veicoli.dto.response.VwComplessivoVeicoliResponse;
 import com.betacom.veicoli.exceptions.VeicoliException;
 import com.betacom.veicoli.services.interfaces.IVeicoloServices;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -23,6 +24,11 @@ public class VeicoloController {
 
 	private final IVeicoloServices veicoloService;
 	
+	@Operation(
+            summary = "GET ALL FILTER VEICOLI",
+            description = "Questo metodo restituisce i veicoli filtrando le varie richieste",
+            tags = {"Veicolo"}
+    )
 	@GetMapping("search")
 	public ResponseEntity<List<VwComplessivoVeicoliResponse>> search(@ParameterObject @ModelAttribute VwComplessivoVeicoliRequest request) throws VeicoliException {
 		return ResponseEntity.ok(veicoloService.search(request));

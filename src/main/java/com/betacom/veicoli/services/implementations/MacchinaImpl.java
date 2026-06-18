@@ -71,10 +71,6 @@ public class MacchinaImpl implements IMacchinaServices{
 		
 		MacchinaResponse res = modelMapper.map(macchina, MacchinaResponse.class);
 
-		res.setTipoVeicoloDesc(macchina.getTipoVeicolo().getDescrizione());
-		res.setCategoriaDesc(macchina.getCategoria().getDescrizione());
-		res.setTipoAlimentazioneDesc(macchina.getTipoAlimentazione().getDescrizione());
-
 		return res;
 	}
 
@@ -170,10 +166,6 @@ public class MacchinaImpl implements IMacchinaServices{
 		macchinaRepository.save(macchina);
 		
 		MacchinaResponse res = modelMapper.map(macchina, MacchinaResponse.class);
-
-		res.setTipoVeicoloDesc(macchina.getTipoVeicolo().getDescrizione());
-		res.setCategoriaDesc(macchina.getCategoria().getDescrizione());
-		res.setTipoAlimentazioneDesc(macchina.getTipoAlimentazione().getDescrizione());
 
 		return res;
 	}

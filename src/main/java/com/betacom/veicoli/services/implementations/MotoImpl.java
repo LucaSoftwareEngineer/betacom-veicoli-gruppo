@@ -59,16 +59,12 @@ public class MotoImpl implements IMotoServices {
 		
 		Moto moto = modelMapper.map(req, Moto.class);
 		moto.setId(null);
-		moto.setTipoVeicolo(tipoVeicolo);
 		moto.setCategoria(categoria);
+		moto.setTipoVeicolo(tipoVeicolo);
 		moto.setTipoAlimentazione(tipoAlimentazione);
 		motoRepository.save(moto);
 		
 		MotoResponse res = modelMapper.map(moto, MotoResponse.class);
-
-		res.setTipoVeicoloDesc(moto.getTipoVeicolo().getDescrizione());
-		res.setCategoriaDesc(moto.getCategoria().getDescrizione());
-		res.setTipoAlimentazioneDesc(moto.getTipoAlimentazione().getDescrizione());
 
 		return res;
 	}
@@ -158,10 +154,6 @@ public class MotoImpl implements IMotoServices {
 		motoRepository.save(moto);
 		
 		MotoResponse res = modelMapper.map(moto, MotoResponse.class);
-
-		res.setTipoVeicoloDesc(moto.getTipoVeicolo().getDescrizione());
-		res.setCategoriaDesc(moto.getCategoria().getDescrizione());
-		res.setTipoAlimentazioneDesc(moto.getTipoAlimentazione().getDescrizione());
 
 		return res;
 	}

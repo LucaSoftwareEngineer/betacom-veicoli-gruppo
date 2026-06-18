@@ -2,30 +2,28 @@ package com.betacom.veicoli.dto.response;
 
 import java.time.Year;
 
+import com.betacom.veicoli.dto.response.tipi.CategoriaResponse;
+import com.betacom.veicoli.dto.response.tipi.TipoAlimentazioneResponse;
+import com.betacom.veicoli.dto.response.tipi.TipoVeicoloResponse;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+@AllArgsConstructor@NoArgsConstructor@Getter@Setter
 public class MotoResponse {
 
 	private Integer id;
+	private TipoVeicoloResponse tipoVeicolo;
+	private CategoriaResponse categoria;
+	private TipoAlimentazioneResponse tipoAlimentazione;
 	private String targa;
-	private Short cilindrata;
-	private Integer tipoVeicoloId;
-	private Short numeroRuote;
-	private Integer tipoAlimentazioneId;
-	private Integer categoriaId;
-	private String tipoAlimentazioneDesc;
-	private String categoriaDesc;
-	private String tipoVeicoloDesc;
-	private String colore;
 	private String marca;
-	private Year annoProduzione;
 	private String modello;
+	private Year annoProduzione;
+	private Short cilindrata;
+	private Short numeroRuote;
+	private String colore;
 	
 }
