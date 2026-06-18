@@ -15,10 +15,23 @@ import com.betacom.veicoli.dto.request.VwComplessivoVeicoliRequest;
 import com.betacom.veicoli.dto.response.BiciResponse;
 import com.betacom.veicoli.dto.response.MotoResponse;
 import com.betacom.veicoli.dto.response.VwComplessivoVeicoliResponse;
+import com.betacom.veicoli.dto.response.tipi.TipoAlimentazioneResponse;
+import com.betacom.veicoli.dto.response.tipi.TipoFrenoResponse;
+import com.betacom.veicoli.dto.response.tipi.TipoSospensioneResponse;
+import com.betacom.veicoli.dto.response.tipi.TipoVeicoloResponse;
 import com.betacom.veicoli.models.VwComplessivoVeicoli;
+import com.betacom.veicoli.models.tipi.TipoAlimentazione;
+import com.betacom.veicoli.models.tipi.TipoFreno;
+import com.betacom.veicoli.models.tipi.TipoSospensione;
+import com.betacom.veicoli.models.tipi.TipoVeicolo;
+import com.betacom.veicoli.repositories.TipoAlimentazioneRepository;
+import com.betacom.veicoli.repositories.TipoFrenoRepository;
+import com.betacom.veicoli.repositories.TipoSospensioneRepository;
+import com.betacom.veicoli.repositories.TipoVeicoloRepository;
 import com.betacom.veicoli.repositories.VwComplessivoVeicoliRepository;
 import com.betacom.veicoli.services.interfaces.IVeicoloServices;
 import com.betacom.veicoli.specifications.VwComplessivoVeicoliSpecification;
+import com.betacom.veicoli.viewmodels.VwComplessivoVeicoliViewModel;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,14 +41,46 @@ public class VeicoloImpl implements IVeicoloServices {
 
 	private final ModelMapper modelMapper;
 	private final VwComplessivoVeicoliRepository vwVeicoliRepository;
+	private final TipoFrenoRepository tipoFrenoRepository;
+	private final TipoSospensioneRepository tipoSospensioneRepository;
+	private final TipoAlimentazioneRepository tipoAlimentazioneRepository;
+	private final TipoVeicoloRepository tipoVeicoloRepository;
 
 	@Override
 	public List<VwComplessivoVeicoliResponse> search(VwComplessivoVeicoliRequest request) {
 
 		Specification<VwComplessivoVeicoli> spec = VwComplessivoVeicoliSpecification.search(request);
 		List<VwComplessivoVeicoli> veicoli = vwVeicoliRepository.findAll(spec);
-
-		return modelMapper.map(veicoli, new TypeToken<List<VwComplessivoVeicoliResponse>>() {}.getType());
+		List<VwComplessivoVeicoliViewModel> veicoliViewModel = modelMapper.map(veicoli, new TypeToken<List<VwComplessivoVeicoliViewModel>>() {}.getType());
+		List<VwComplessivoVeicoliResponse> veicoliResponse = modelMapper.map(veicoliViewModel, new TypeToken<List<VwComplessivoVeicoliResponse>>() {}.getType());
+		
+		for (int i=0; i<veicoliViewModel.size(); i++) {
+			VwComplessivoVeicoliViewModel veicoloViewModel = veicoliViewModel.get(i);
+			VwComplessivoVeicoliResponse veicoloResponse = veicoliResponse.get(i);
+			
+			Integer idTipoFreno = Integer.valueOf(veicoloViewModel.getTipoFreno().toString());
+			Integer idTipoSospensione = Integer.valueOf(veicoloViewModel.getTipoSospensione().toString());
+			Integer idTipoAlimentazione = Integer.valueOf(veicoloViewModel.getTipoAlimentazione().toString());
+			Integer idTipoVeicolo = Integer.valueOf(veicoloViewModel.getTipoVeicolo().toString());
+			
+			TipoFreno tipoFreno = tipoFrenoRepository.findById(idTipoFreno).get();
+			TipoFrenoResponse tipoFrenoResponse = modelMapper.map(tipoFreno, TipoFrenoResponse.class);
+			veicoloResponse.setTipoFreno(tipoFrenoResponse);
+			
+			TipoSospensione tipoSospensione = tipoSospensioneRepository.findById(idTipoSospensione).get();
+			TipoSospensioneResponse tipoSospensioneResponse = modelMapper.map(tipoSospensione, TipoSospensioneResponse.class);
+			veicoloResponse.setTipoSospensione(tipoSospensioneResponse);
+			
+			TipoAlimentazione tipoAlimentazione = tipoAlimentazioneRepository.findById(idTipoAlimentazione).get();
+			TipoAlimentazioneResponse tipoAlimentazioneResponse = modelMapper.map(tipoAlimentazione, TipoAlimentazioneResponse.class);
+			veicoloResponse.setTipoAlimentazione(tipoAlimentazioneResponse);
+			
+			TipoVeicolo tipoVeicolo = tipoVeicoloRepository.findById(idTipoVeicolo).get();
+			TipoVeicoloResponse tipoVeicoloResponse = modelMapper.map(tipoVeicolo, TipoVeicoloResponse.class);
+			veicoloResponse.setTipoVeicolo(tipoVeicoloResponse);
+		}
+		
+		return veicoliResponse;
 	}
 
 }

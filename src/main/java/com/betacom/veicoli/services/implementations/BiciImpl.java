@@ -183,7 +183,7 @@ public class BiciImpl implements IBiciServices {
 	 * Metodo che permette di vedere l'elenco delle bici
 	 */
 	@Override
-	public List<BiciResponse> getAll() throws VeicoliException {		
+	public List<BiciResponse> getAll() throws VeicoliException {
 		return modelMapper.map(biciRepository.findAll(), new TypeToken<List<BiciResponse>>() {}.getType());
 	}
 
