@@ -24,7 +24,7 @@ public class MotoRequest {
 	
 	@NotBlank(groups = {ValidationGroups.Create.class} , message = "moto.targa.null")
 	@Pattern(
-	        regexp = "^[A-Z]{2}[0-9]{5}$",
+	        regexp = "^[A-Z]{2}[0-9]{2}[A-Z]{2}$",
 	        groups = {ValidationGroups.Update.class, ValidationGroups.Create.class},
 	        message = "moto.targa.invalid")
 	private String targa;
@@ -53,7 +53,7 @@ public class MotoRequest {
 	private String marca;
 	
 	@NotNull(groups = { ValidationGroups.Create.class} , message = "veicolo.anno.null")
-	@PastOrPresent(groups = { ValidationGroups.Create.class} , message = "veicolo.anno.null")
+	@PastOrPresent(groups = { ValidationGroups.Create.class} , message = "veicolo.anno.invalid")
 	private Year annoProduzione;
 	
 	@NotBlank(groups = { ValidationGroups.Create.class} , message =  "veicolo.modello.null")

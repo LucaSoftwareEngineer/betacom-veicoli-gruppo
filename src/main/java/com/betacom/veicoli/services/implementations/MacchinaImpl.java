@@ -2,6 +2,7 @@ package com.betacom.veicoli.services.implementations;
 
 import java.time.Year;
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -13,6 +14,9 @@ import com.betacom.veicoli.dto.response.MacchinaResponse;
 import com.betacom.veicoli.dto.response.ResponseDTO;
 import com.betacom.veicoli.exceptions.VeicoliException;
 import com.betacom.veicoli.models.Macchina;
+import com.betacom.veicoli.models.tipi.Categoria;
+import com.betacom.veicoli.models.tipi.TipoAlimentazione;
+import com.betacom.veicoli.models.tipi.TipoVeicolo;
 import com.betacom.veicoli.repositories.CategoriaRepository;
 import com.betacom.veicoli.repositories.MacchinaRepository;
 import com.betacom.veicoli.repositories.TipoAlimentazioneRepository;
@@ -40,13 +44,19 @@ public class MacchinaImpl implements IMacchinaServices{
 		if(macchinaRepository.existsByTarga(req.getTarga()))
 			throw new VeicoliException("macchina.targa.exists");
 		
-		if(!tipoVeicoloRepository.existsById(req.getTipoVeicoloId()))
+		TipoVeicolo tipoVeicolo = tipoVeicoloRepository.findById(req.getTipoVeicoloId())
+			    .orElseThrow(() -> new VeicoliException("veicolo.tipo.invalid"));
+		if(!tipoVeicolo.getDescrizione().equalsIgnoreCase("MACCHINA"))
 			throw new VeicoliException("veicolo.tipo.invalid");
 		
-		if(!tipoAlimentazioneRepository.existsById(req.getTipoAlimentazioneId()))
+		TipoAlimentazione tipoAlimentazione = tipoAlimentazioneRepository.findById(req.getTipoAlimentazioneId())
+				.orElseThrow(() -> new VeicoliException("veicolo.tipo.alim.invalid"));
+		if(tipoAlimentazione.getDescrizione().equalsIgnoreCase("MANUALE"))
 			throw new VeicoliException("veicolo.tipo.alim.invalid");
 		
-		if(!categoriaRepository.existsById(req.getCategoriaId()))
+		Categoria categoria = categoriaRepository.findById(req.getCategoriaId())
+				.orElseThrow(() -> new VeicoliException("veicolo.categoria.invalid"));
+		if(categoria.getDescrizione().equalsIgnoreCase("MOTOCROSS"))
 			throw new VeicoliException("veicolo.categoria.invalid");
 		
 		if(req.getAnnoProduzione().isBefore(Year.of(2006)) || req.getAnnoProduzione().isAfter(Year.now()))
@@ -68,87 +78,90 @@ public class MacchinaImpl implements IMacchinaServices{
 				.orElseThrow(() -> new VeicoliException("veicolo.id.invalid"));
 		
 		if(req.getTarga() != null) {
-			if(macchina.getTarga().equals(req.getTarga())) {
-				req.setTarga(null);
-			}
-		    if(macchinaRepository.existsByTarga(req.getTarga()))
+			if(macchinaRepository.existsByTarga(req.getTarga()))
 		        throw new VeicoliException("macchina.targa.exists");
+			if(macchina.getTarga().equals(req.getTarga())) {
+				req.setTarga(macchina.getTarga());
+			}else {
+		    macchina.setTarga(req.getTarga());
+			}
 		}
 		
 		if(req.getCilindrata() != null) {
 			if(macchina.getCilindrata().equals(req.getCilindrata())) {
 				req.setCilindrata(null);
+			}else {
+			macchina.setCilindrata(req.getCilindrata());
 			}
 		}
 		
 		if(req.getNumeroPorte() != null) {
-			if(req.getNumeroPorte() == 4)
+			if(req.getNumeroPorte() != 3 || req.getNumeroPorte() != 5)
 				throw new VeicoliException("macchina.porte.invalid");
+			else macchina.setNumeroPorte(req.getNumeroPorte());
 		}
 		
 		if(req.getTipoVeicoloId() != null) {
-			if(!tipoVeicoloRepository.existsById(req.getTipoVeicoloId()))
+			TipoVeicolo tipoVeicolo = tipoVeicoloRepository.findById(req.getTipoVeicoloId())
+				    .orElseThrow(() -> new VeicoliException("veicolo.tipo.invalid"));
+			if(!tipoVeicolo.getDescrizione().equalsIgnoreCase("MACCHINA"))
 				throw new VeicoliException("veicolo.tipo.invalid");
+			else macchina.setTipoVeicolo(tipoVeicolo);
 		}
 		
 		if(req.getNumeroRuote() != null) {
 			if(req.getNumeroRuote() != 4)
 				throw new VeicoliException("veicolo.num.ruote.invalid");
+			else macchina.setNumeroRuote(req.getNumeroRuote());
 		}
 		
 		if(req.getTipoAlimentazioneId() != null) {
-			if(!tipoAlimentazioneRepository.existsById(req.getTipoAlimentazioneId()))
+			TipoAlimentazione tipoAlimentazione = tipoAlimentazioneRepository.findById(req.getTipoAlimentazioneId())
+					.orElseThrow(() -> new VeicoliException("veicolo.tipo.alim.invalid"));
+			if(tipoAlimentazione.getDescrizione().equalsIgnoreCase("MANUALE"))
 				throw new VeicoliException("veicolo.tipo.alim.invalid");
+			else macchina.setTipoAlimentazione(tipoAlimentazione);
 		}
 		
 		if(req.getCategoriaId() != null) {
-			if(!categoriaRepository.existsById(req.getCategoriaId()))
+			Categoria categoria = categoriaRepository.findById(req.getCategoriaId())
+					.orElseThrow(() -> new VeicoliException("veicolo.categoria.invalid"));
+			if(categoria.getDescrizione().equalsIgnoreCase("MOTOCROSS"))
 				throw new VeicoliException("veicolo.categoria.invalid");
+			else macchina.setCategoria(categoria);
 		}
 		
 		if(!req.getColore().isEmpty() || !req.getColore().isBlank()) {
 			if(macchina.getColore().equals(req.getColore())) {
 				req.setColore(null);
+			}else {
+				macchina.setColore(req.getColore());
 			}
 		}
 		
 		if(!req.getMarca().isEmpty() || !req.getMarca().isBlank()) {
 			if(macchina.getMarca().equals(req.getMarca())) {
 				req.setMarca(null);
+			}else {
+				macchina.setMarca(req.getMarca());
 			}
 		}
 		
 		if(req.getAnnoProduzione() != null) {
 			if(req.getAnnoProduzione().isBefore(Year.of(2006)) || req.getAnnoProduzione().isAfter(Year.now()))
 				throw new VeicoliException("veicolo.anno.invalid");
+			else macchina.setAnnoProduzione(req.getAnnoProduzione());
 		}
 		
 		if(!req.getModello().isEmpty() || !req.getModello().isBlank()) {
 			if(macchina.getModello().equals(req.getModello())) {
 				req.setModello(null);
+			}else {
+				macchina.setModello(req.getModello());
 			}
 		}
 		
-		if(req.getTarga() != null) macchina.setTarga(req.getTarga());
-		if(req.getCilindrata() != null) macchina.setCilindrata(req.getCilindrata());
-		if(req.getNumeroPorte() != null) macchina.setNumeroPorte(req.getNumeroPorte());
-		if(req.getNumeroRuote() != null) macchina.setNumeroRuote(req.getNumeroRuote());
-		if(req.getColore() != null) macchina.setColore(req.getColore());
-		if(req.getMarca() != null) macchina.setMarca(req.getMarca());
-		if(req.getModello() != null) macchina.setModello(req.getModello());
-		if(req.getAnnoProduzione() != null) macchina.setAnnoProduzione(req.getAnnoProduzione());
-
-		if(req.getTipoVeicoloId() != null)
-		    macchina.setTipoVeicolo(tipoVeicoloRepository.findById(req.getTipoVeicoloId()).get());
-
-		if(req.getTipoAlimentazioneId() != null)
-		    macchina.setTipoAlimentazione(tipoAlimentazioneRepository.findById(req.getTipoAlimentazioneId()).get());
-
-		if(req.getCategoriaId() != null)
-		    macchina.setCategoria(categoriaRepository.findById(req.getCategoriaId()).get());
-
 		macchinaRepository.save(macchina);
-
 		return modelMapper.map(macchina, MacchinaResponse.class);
 	}
 
