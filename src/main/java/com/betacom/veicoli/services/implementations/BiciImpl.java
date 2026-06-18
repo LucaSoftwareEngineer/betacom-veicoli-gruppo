@@ -15,6 +15,7 @@ import com.betacom.veicoli.models.tipi.Categoria;
 import com.betacom.veicoli.models.tipi.TipoAlimentazione;
 import com.betacom.veicoli.models.tipi.TipoFreno;
 import com.betacom.veicoli.models.tipi.TipoSospensione;
+import com.betacom.veicoli.models.tipi.TipoVeicolo;
 import com.betacom.veicoli.repositories.BiciRepository;
 import com.betacom.veicoli.repositories.CategoriaRepository;
 import com.betacom.veicoli.repositories.TipoAlimentazioneRepository;
@@ -24,7 +25,9 @@ import com.betacom.veicoli.repositories.TipoVeicoloRepository;
 import com.betacom.veicoli.services.interfaces.IBiciServices;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BiciImpl implements IBiciServices {
@@ -44,26 +47,41 @@ public class BiciImpl implements IBiciServices {
 	@Transactional
 	public BiciResponse create(BiciRequest request) throws VeicoliException {
 		
-		if (!categoriaRepository.existsById(request.getCategoriaId()))
-			throw new VeicoliException("veicolo.categoria.invalid");
-		
-		if (!tipoAlimentazioneRepository.existsById(request.getTipoAlimentazioneId()))
-			throw new VeicoliException("veicolo.tipo.alim.invalid");
-		
-		if (!tipoVeicoloRepository.existsById(request.getTipoVeicoloId()))
+		//controllo categoria se esiste
+		Categoria categoria = categoriaRepository.findById(request.getCategoriaId()).orElseThrow(() -> new VeicoliException("veicolo.categoria.invalid"));
+		if(!categoria.getDescrizione().equalsIgnoreCase("FUORISTRADA") && !categoria.getDescrizione().equalsIgnoreCase("STRADA"))
 			throw new VeicoliException("veicolo.tipo.invalid");
 		
-		if (!tipoSospensioneRepository.existsById(request.getTipoSospensioneId()))
-			throw new VeicoliException("bici.tipo.sospensione.invalid");
+		//controllo tipo veicolo esiste		
+		TipoVeicolo tipoVeicolo = tipoVeicoloRepository.findById(request.getTipoVeicoloId())
+			    .orElseThrow(() -> new VeicoliException("veicolo.tipo.invalid"));
+		if(!tipoVeicolo.getDescrizione().equalsIgnoreCase("BICI"))
+			throw new VeicoliException("veicolo.tipo.invalid");
 		
-		if (!tipoFrenoRepository.existsById(request.getTipoFrenoId()))
-			throw new VeicoliException("bici.tipo.freno.invalid");
+		//controllo tipo alimentazione esiste e se va bene per bici
+		TipoAlimentazione tipoAlimentazione = tipoAlimentazioneRepository.findById(request.getTipoAlimentazioneId()).orElseThrow(() -> new VeicoliException("veicolo.tipo.alim.invalid"));
+		if(!tipoAlimentazione.getDescrizione().equalsIgnoreCase("MANUALE") && !tipoAlimentazione.getDescrizione().equalsIgnoreCase("ELETTRICO"))
+			throw new VeicoliException("veicolo.tipo.alim.invalid");
+		
+		//controllo tipo sospensione
+		TipoSospensione tipoSospensione = tipoSospensioneRepository.findById(request.getTipoSospensioneId())
+		.orElseThrow(() -> new VeicoliException("bici.tipo.sospensione.invalid"));
+		
+		//controllo tipo freno
+		TipoFreno tipoFreno = tipoFrenoRepository.findById(request.getTipoFrenoId()).orElseThrow(() -> new VeicoliException("bici.tipo.freno.invalid"));
 		
 		Bici bici = modelMapper.map(request, Bici.class);
 		bici.setId(null);
+		bici.setCategoria(categoria);
+		bici.setTipoVeicolo(tipoVeicolo);
+		bici.setTipoAlimentazione(tipoAlimentazione);
+		bici.setTipoSospensione(tipoSospensione);
+		bici.setTipoFreno(tipoFreno);
 		biciRepository.save(bici);
 		
-		return modelMapper.map(bici, BiciResponse.class);
+		BiciResponse res = modelMapper.map(bici, BiciResponse.class);
+		
+		return res;
 	}
 
 	/*
@@ -102,30 +120,29 @@ public class BiciImpl implements IBiciServices {
 			bici.setPieghevole(request.getPieghevole());
 		}
 		
-		if (request.getTipoVeicoloId() != null) {
-			if (!tipoVeicoloRepository.existsById(request.getTipoVeicoloId())) {
-				throw new VeicoliException("veicolo.tipo.invalid");
-			}
-		}
-		
 		if (request.getNumeroRuote() != null) {
 			bici.setNumeroRuote(request.getNumeroRuote());
 		}
 		
 		if (request.getTipoAlimentazioneId() != null) {
-			if (!tipoAlimentazioneRepository.existsById(request.getTipoAlimentazioneId())) {
-				throw new VeicoliException("veicolo.tipo.alim.invalid");
-			}
 			TipoAlimentazione tipoAlimentazione = tipoAlimentazioneRepository.findById(request.getTipoSospensioneId()).orElseThrow(() -> new VeicoliException("bici.tipo.alim.invalid"));
+			if(!tipoAlimentazione.getDescrizione().equalsIgnoreCase("MANUALE") && !tipoAlimentazione.getDescrizione().equalsIgnoreCase("ELETTRICO"))
+				throw new VeicoliException("veicolo.tipo.alim.invalid");
 			bici.setTipoAlimentazione(tipoAlimentazione);
 		}
 		
 		if (request.getCategoriaId() != null) {
-			if (!categoriaRepository.existsById(request.getCategoriaId())) {
-				throw new VeicoliException("veicolo.categoria.invalid");
-			}
 			Categoria categoria = categoriaRepository.findById(request.getCategoriaId()).orElseThrow(() -> new VeicoliException("veicolo.categoria.invalid"));
+			if(!categoria.getDescrizione().equalsIgnoreCase("FUORISTRADA") && !categoria.getDescrizione().equalsIgnoreCase("STRADA"))
+				throw new VeicoliException("veicolo.tipo.invalid");
 			bici.setCategoria(categoria);
+		}
+		
+		if (request.getTipoVeicoloId() != null) {
+			TipoVeicolo tipoVeicolo = tipoVeicoloRepository.findById(request.getTipoVeicoloId())
+				    .orElseThrow(() -> new VeicoliException("veicolo.tipo.invalid"));
+			if(!tipoVeicolo.getDescrizione().equalsIgnoreCase("BICI"))
+				throw new VeicoliException("veicolo.tipo.invalid");
 		}
 		
 		if (!request.getColore().isEmpty() || !request.getColore().isBlank()) {

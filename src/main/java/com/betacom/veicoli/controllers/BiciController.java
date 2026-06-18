@@ -40,7 +40,7 @@ public class BiciController {
             tags = {"Bici"}
     )
 	@PostMapping("/")
-	public ResponseEntity<BiciResponse> create(@RequestBody @Validated(ValidationGroups.Create.class) BiciRequest req) throws VeicoliException {
+	public ResponseEntity<BiciResponse> create(@RequestBody @Validated(ValidationGroups.Create.class) BiciRequest req) throws VeicoliException {		
 		return new ResponseEntity<>(biciService.create(req), HttpStatus.CREATED);
 	}
 	
