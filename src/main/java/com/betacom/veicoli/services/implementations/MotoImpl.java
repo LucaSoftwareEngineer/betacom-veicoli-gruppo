@@ -8,12 +8,13 @@ import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
 import com.betacom.veicoli.dto.request.MotoRequest;
-import com.betacom.veicoli.dto.response.MacchinaResponse;
 import com.betacom.veicoli.dto.response.MotoResponse;
 import com.betacom.veicoli.dto.response.ResponseDTO;
 import com.betacom.veicoli.exceptions.VeicoliException;
-import com.betacom.veicoli.models.Macchina;
 import com.betacom.veicoli.models.Moto;
+import com.betacom.veicoli.models.tipi.Categoria;
+import com.betacom.veicoli.models.tipi.TipoAlimentazione;
+import com.betacom.veicoli.models.tipi.TipoVeicolo;
 import com.betacom.veicoli.repositories.CategoriaRepository;
 import com.betacom.veicoli.repositories.MotoRepository;
 import com.betacom.veicoli.repositories.TipoAlimentazioneRepository;
@@ -36,15 +37,21 @@ public class MotoImpl implements IMotoServices {
 	public MotoResponse create(MotoRequest req) throws VeicoliException{
 		
 		if(motoRepository.existsByTarga(req.getTarga()))
-			throw new VeicoliException("macchina.targa.exists");
+			throw new VeicoliException("moto.targa.exists");
 		
-		if(!tipoVeicoloRepository.existsById(req.getTipoVeicoloId()))
+		TipoVeicolo tipoVeicolo = tipoVeicoloRepository.findById(req.getTipoVeicoloId())
+			    .orElseThrow(() -> new VeicoliException("veicolo.tipo.invalid"));
+		if(!tipoVeicolo.getDescrizione().equalsIgnoreCase("MOTO"))
 			throw new VeicoliException("veicolo.tipo.invalid");
 		
-		if(!tipoAlimentazioneRepository.existsById(req.getTipoAlimentazioneId()))
+		TipoAlimentazione tipoAlimentazione = tipoAlimentazioneRepository.findById(req.getTipoAlimentazioneId())
+				.orElseThrow(() -> new VeicoliException("veicolo.tipo.alim.invalid"));
+		if(tipoAlimentazione.getDescrizione().equalsIgnoreCase("MANUALE") || tipoAlimentazione.getDescrizione().equalsIgnoreCase("DIESEL"))
 			throw new VeicoliException("veicolo.tipo.alim.invalid");
 		
-		if(!categoriaRepository.existsById(req.getCategoriaId()))
+		Categoria categoria = categoriaRepository.findById(req.getCategoriaId())
+				.orElseThrow(() -> new VeicoliException("veicolo.categoria.invalid"));
+		if(categoria.getDescrizione().equalsIgnoreCase("FUORISTRADA") || categoria.getDescrizione().equalsIgnoreCase("SUV"))
 			throw new VeicoliException("veicolo.categoria.invalid");
 		
 		if(req.getAnnoProduzione().isBefore(Year.of(2006)))
@@ -52,9 +59,18 @@ public class MotoImpl implements IMotoServices {
 		
 		Moto moto = modelMapper.map(req, Moto.class);
 		moto.setId(null);
+		moto.setTipoVeicolo(tipoVeicolo);
+		moto.setCategoria(categoria);
+		moto.setTipoAlimentazione(tipoAlimentazione);
 		motoRepository.save(moto);
 		
-		return modelMapper.map(moto, MotoResponse.class);
+		MotoResponse res = modelMapper.map(moto, MotoResponse.class);
+
+		res.setTipoVeicoloDesc(moto.getTipoVeicolo().getDescrizione());
+		res.setCategoriaDesc(moto.getCategoria().getDescrizione());
+		res.setTipoAlimentazioneDesc(moto.getTipoAlimentazione().getDescrizione());
+
+		return res;
 	}
 
 	@Override
@@ -63,84 +79,91 @@ public class MotoImpl implements IMotoServices {
 		Moto moto = motoRepository.findById(id)
 				.orElseThrow(() -> new VeicoliException("veicolo.id.invalid"));
 		
-		if(req.getTarga() != null) {
-			if(moto.getTarga().equals(req.getTarga())) {
-				req.setTarga(null);
-			}
-		    if(motoRepository.existsByTarga(req.getTarga()))
-		        throw new VeicoliException("moto.targa.exists");
+		if(req.getTarga() != null && !req.getTarga().isBlank()) {
+		    if(!req.getTarga().equals(moto.getTarga())) {
+		        if(motoRepository.existsByTarga(req.getTarga()))
+		            throw new VeicoliException("moto.targa.exists");
+		        moto.setTarga(req.getTarga());
+		    }
 		}
 		
 		if(req.getCilindrata() != null) {
 			if(moto.getCilindrata().equals(req.getCilindrata())) {
 				req.setCilindrata(null);
+			}else {
+			moto.setCilindrata(req.getCilindrata());
 			}
 		}
 		
 		if(req.getTipoVeicoloId() != null) {
-			if(!tipoVeicoloRepository.existsById(req.getTipoVeicoloId()))
+			TipoVeicolo tipoVeicolo = tipoVeicoloRepository.findById(req.getTipoVeicoloId())
+				    .orElseThrow(() -> new VeicoliException("veicolo.tipo.invalid"));
+			if(!tipoVeicolo.getDescrizione().equalsIgnoreCase("MOTO"))
 				throw new VeicoliException("veicolo.tipo.invalid");
+			else moto.setTipoVeicolo(tipoVeicolo);
 		}
 		
 		if(req.getNumeroRuote() != null) {
 			if(req.getNumeroRuote() < 2 || req.getNumeroRuote() > 3)
 				throw new VeicoliException("veicolo.num.ruote.invalid");
+			else moto.setNumeroRuote(req.getNumeroRuote());
 		}
 		
 		if(req.getTipoAlimentazioneId() != null) {
-			if(!tipoAlimentazioneRepository.existsById(req.getTipoAlimentazioneId()))
+			TipoAlimentazione tipoAlimentazione = tipoAlimentazioneRepository.findById(req.getTipoAlimentazioneId())
+					.orElseThrow(() -> new VeicoliException("veicolo.tipo.alim.invalid"));
+			if(tipoAlimentazione.getDescrizione().equalsIgnoreCase("MANUALE") || tipoAlimentazione.getDescrizione().equalsIgnoreCase("DIESEL"))
 				throw new VeicoliException("veicolo.tipo.alim.invalid");
+			else moto.setTipoAlimentazione(tipoAlimentazione);
 		}
 		
 		if(req.getCategoriaId() != null) {
-			if(!categoriaRepository.existsById(req.getCategoriaId()))
+			Categoria categoria = categoriaRepository.findById(req.getCategoriaId())
+					.orElseThrow(() -> new VeicoliException("veicolo.categoria.invalid"));
+			if(categoria.getDescrizione().equalsIgnoreCase("FUORISTRADA") || categoria.getDescrizione().equalsIgnoreCase("SUV"))
 				throw new VeicoliException("veicolo.categoria.invalid");
+			else moto.setCategoria(categoria);
 		}
 		
 		if(!req.getColore().isEmpty() || !req.getColore().isBlank()) {
 			if(moto.getColore().equals(req.getColore())) {
 				req.setColore(null);
+			}else {
+				moto.setColore(req.getColore());
 			}
 		}
 		
 		if(!req.getMarca().isEmpty() || !req.getMarca().isBlank()) {
 			if(moto.getMarca().equals(req.getMarca())) {
 				req.setMarca(null);
+			}else {
+				moto.setMarca(req.getMarca());
 			}
 		}
 		
 		if(req.getAnnoProduzione() != null) {
 			if(req.getAnnoProduzione().isBefore(Year.of(2006)) || req.getAnnoProduzione().isAfter(Year.now()))
 				throw new VeicoliException("veicolo.anno.invalid");
+			else moto.setAnnoProduzione(req.getAnnoProduzione());
 		}
 		
 		if(!req.getModello().isEmpty() || !req.getModello().isBlank()) {
 			if(moto.getModello().equals(req.getModello())) {
 				req.setModello(null);
+			}else {
+				moto.setModello(req.getModello());
 			}
 		}
-		
-		if(req.getTarga() != null) moto.setTarga(req.getTarga());
-		if(req.getCilindrata() != null) moto.setCilindrata(req.getCilindrata());
-		if(req.getNumeroRuote() != null) moto.setNumeroRuote(req.getNumeroRuote());
-		if(req.getNumeroRuote() != null) moto.setNumeroRuote(req.getNumeroRuote());
-		if(req.getColore() != null) moto.setColore(req.getColore());
-		if(req.getMarca() != null) moto.setMarca(req.getMarca());
-		if(req.getModello() != null) moto.setModello(req.getModello());
-		if(req.getAnnoProduzione() != null) moto.setAnnoProduzione(req.getAnnoProduzione());
-
-		if(req.getTipoVeicoloId() != null)
-		    moto.setTipoVeicolo(tipoVeicoloRepository.findById(req.getTipoVeicoloId()).get());
-
-		if(req.getTipoAlimentazioneId() != null)
-		    moto.setTipoAlimentazione(tipoAlimentazioneRepository.findById(req.getTipoAlimentazioneId()).get());
-
-		if(req.getCategoriaId() != null)
-		    moto.setCategoria(categoriaRepository.findById(req.getCategoriaId()).get());
 
 		motoRepository.save(moto);
+		
+		MotoResponse res = modelMapper.map(moto, MotoResponse.class);
 
-		return modelMapper.map(moto, MotoResponse.class);
+		res.setTipoVeicoloDesc(moto.getTipoVeicolo().getDescrizione());
+		res.setCategoriaDesc(moto.getCategoria().getDescrizione());
+		res.setTipoAlimentazioneDesc(moto.getTipoAlimentazione().getDescrizione());
+
+		return res;
 	}
 
 	@Override

@@ -20,6 +20,9 @@ public class MotoResponse {
 	private Short numeroRuote;
 	private Integer tipoAlimentazioneId;
 	private Integer categoriaId;
+	private String tipoAlimentazioneDesc;
+	private String categoriaDesc;
+	private String tipoVeicoloDesc;
 	private String colore;
 	private String marca;
 	private Year annoProduzione;

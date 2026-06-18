@@ -23,7 +23,7 @@ import lombok.ToString;
 @ToString
 public class MacchinaRequest {
 
-	@NotBlank(groups = {ValidationGroups.Create.class} , message = "macchina.targa.invalid")
+	@NotBlank(groups = {ValidationGroups.Create.class} , message = "macchina.targa.null")
 	@Pattern(
 	        regexp = "^[A-Z]{2}[0-9]{3}[A-Z]{2}$",
 	        groups = {ValidationGroups.Update.class, ValidationGroups.Create.class},
