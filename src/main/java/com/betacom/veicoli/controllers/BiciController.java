@@ -38,7 +38,7 @@ public class BiciController {
             description = "Questo metodo serve a inserire una nuova bici sul database",
             tags = {"Bici"}
     )
-	@PostMapping("create")
+	@PostMapping("/")
 	public ResponseEntity<BiciResponse> create(@RequestBody @Validated(ValidationGroups.Create.class) BiciRequest req) throws VeicoliException {
 		return new ResponseEntity<>(biciService.create(req), HttpStatus.CREATED);
 	}

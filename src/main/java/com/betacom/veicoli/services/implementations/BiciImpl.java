@@ -141,6 +141,8 @@ public class BiciImpl implements IBiciServices {
 			bici.setModello(request.getModello());
 		}
 		
+		biciRepository.save(bici);
+		
 		return modelMapper.map(bici, BiciResponse.class);
 	}
 
