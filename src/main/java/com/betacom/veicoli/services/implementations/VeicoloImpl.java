@@ -58,26 +58,33 @@ public class VeicoloImpl implements IVeicoloServices {
 			VwComplessivoVeicoliViewModel veicoloViewModel = veicoliViewModel.get(i);
 			VwComplessivoVeicoliResponse veicoloResponse = veicoliResponse.get(i);
 			
-			Integer idTipoFreno = Integer.valueOf(veicoloViewModel.getTipoFreno().toString());
-			Integer idTipoSospensione = Integer.valueOf(veicoloViewModel.getTipoSospensione().toString());
-			Integer idTipoAlimentazione = Integer.valueOf(veicoloViewModel.getTipoAlimentazione().toString());
-			Integer idTipoVeicolo = Integer.valueOf(veicoloViewModel.getTipoVeicolo().toString());
+			if (veicoloViewModel.getTipoFreno() != null) {
+				Integer idTipoFreno = Integer.valueOf(veicoloViewModel.getTipoFreno().toString());
+				TipoFreno tipoFreno = tipoFrenoRepository.findById(idTipoFreno).get();
+				TipoFrenoResponse tipoFrenoResponse = modelMapper.map(tipoFreno, TipoFrenoResponse.class);
+				veicoloResponse.setTipoFreno(tipoFrenoResponse);
+			}
 			
-			TipoFreno tipoFreno = tipoFrenoRepository.findById(idTipoFreno).get();
-			TipoFrenoResponse tipoFrenoResponse = modelMapper.map(tipoFreno, TipoFrenoResponse.class);
-			veicoloResponse.setTipoFreno(tipoFrenoResponse);
+			if (veicoloViewModel.getTipoSospensione() != null) {
+				Integer idTipoSospensione = Integer.valueOf(veicoloViewModel.getTipoSospensione().toString());
+				TipoSospensione tipoSospensione = tipoSospensioneRepository.findById(idTipoSospensione).get();
+				TipoSospensioneResponse tipoSospensioneResponse = modelMapper.map(tipoSospensione, TipoSospensioneResponse.class);
+				veicoloResponse.setTipoSospensione(tipoSospensioneResponse);
+			}
 			
-			TipoSospensione tipoSospensione = tipoSospensioneRepository.findById(idTipoSospensione).get();
-			TipoSospensioneResponse tipoSospensioneResponse = modelMapper.map(tipoSospensione, TipoSospensioneResponse.class);
-			veicoloResponse.setTipoSospensione(tipoSospensioneResponse);
+			if (veicoloViewModel.getTipoAlimentazione() != null) {
+				Integer idTipoAlimentazione = Integer.valueOf(veicoloViewModel.getTipoAlimentazione().toString());
+				TipoAlimentazione tipoAlimentazione = tipoAlimentazioneRepository.findById(idTipoAlimentazione).get();
+				TipoAlimentazioneResponse tipoAlimentazioneResponse = modelMapper.map(tipoAlimentazione, TipoAlimentazioneResponse.class);
+				veicoloResponse.setTipoAlimentazione(tipoAlimentazioneResponse);
+			}
 			
-			TipoAlimentazione tipoAlimentazione = tipoAlimentazioneRepository.findById(idTipoAlimentazione).get();
-			TipoAlimentazioneResponse tipoAlimentazioneResponse = modelMapper.map(tipoAlimentazione, TipoAlimentazioneResponse.class);
-			veicoloResponse.setTipoAlimentazione(tipoAlimentazioneResponse);
-			
-			TipoVeicolo tipoVeicolo = tipoVeicoloRepository.findById(idTipoVeicolo).get();
-			TipoVeicoloResponse tipoVeicoloResponse = modelMapper.map(tipoVeicolo, TipoVeicoloResponse.class);
-			veicoloResponse.setTipoVeicolo(tipoVeicoloResponse);
+			if (veicoloViewModel.getTipoVeicolo() != null) {
+				Integer idTipoVeicolo = Integer.valueOf(veicoloViewModel.getTipoVeicolo().toString());
+				TipoVeicolo tipoVeicolo = tipoVeicoloRepository.findById(idTipoVeicolo).get();
+				TipoVeicoloResponse tipoVeicoloResponse = modelMapper.map(tipoVeicolo, TipoVeicoloResponse.class);
+				veicoloResponse.setTipoVeicolo(tipoVeicoloResponse);
+			}
 		}
 		
 		return veicoliResponse;
