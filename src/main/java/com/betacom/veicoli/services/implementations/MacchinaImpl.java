@@ -64,10 +64,18 @@ public class MacchinaImpl implements IMacchinaServices{
 			
 		Macchina macchina = modelMapper.map(req, Macchina.class);
 		macchina.setId(null);
+		macchina.setTipoVeicolo(tipoVeicolo);
+		macchina.setCategoria(categoria);
+		macchina.setTipoAlimentazione(tipoAlimentazione);
 		macchinaRepository.save(macchina);
 		
-		
-		return modelMapper.map(macchina, MacchinaResponse.class);
+		MacchinaResponse res = modelMapper.map(macchina, MacchinaResponse.class);
+
+		res.setTipoVeicoloDesc(macchina.getTipoVeicolo().getDescrizione());
+		res.setCategoriaDesc(macchina.getCategoria().getDescrizione());
+		res.setTipoAlimentazioneDesc(macchina.getTipoAlimentazione().getDescrizione());
+
+		return res;
 	}
 
 	@Transactional
@@ -77,14 +85,12 @@ public class MacchinaImpl implements IMacchinaServices{
 		Macchina macchina = macchinaRepository.findById(id)
 				.orElseThrow(() -> new VeicoliException("veicolo.id.invalid"));
 		
-		if(req.getTarga() != null) {
-			if(macchinaRepository.existsByTarga(req.getTarga()))
-		        throw new VeicoliException("macchina.targa.exists");
-			if(macchina.getTarga().equals(req.getTarga())) {
-				req.setTarga(macchina.getTarga());
-			}else {
-		    macchina.setTarga(req.getTarga());
-			}
+		if(req.getTarga() != null && !req.getTarga().isBlank()) {
+		    if(!req.getTarga().equals(macchina.getTarga())) {
+		        if(macchinaRepository.existsByTarga(req.getTarga()))
+		            throw new VeicoliException("macchina.targa.exists");
+		        macchina.setTarga(req.getTarga());
+		    }
 		}
 		
 		if(req.getCilindrata() != null) {
@@ -96,7 +102,7 @@ public class MacchinaImpl implements IMacchinaServices{
 		}
 		
 		if(req.getNumeroPorte() != null) {
-			if(req.getNumeroPorte() != 3 || req.getNumeroPorte() != 5)
+			if(req.getNumeroPorte() != 3 && req.getNumeroPorte() != 5)
 				throw new VeicoliException("macchina.porte.invalid");
 			else macchina.setNumeroPorte(req.getNumeroPorte());
 		}
@@ -162,7 +168,14 @@ public class MacchinaImpl implements IMacchinaServices{
 		}
 		
 		macchinaRepository.save(macchina);
-		return modelMapper.map(macchina, MacchinaResponse.class);
+		
+		MacchinaResponse res = modelMapper.map(macchina, MacchinaResponse.class);
+
+		res.setTipoVeicoloDesc(macchina.getTipoVeicolo().getDescrizione());
+		res.setCategoriaDesc(macchina.getCategoria().getDescrizione());
+		res.setTipoAlimentazioneDesc(macchina.getTipoAlimentazione().getDescrizione());
+
+		return res;
 	}
 
 	@Override

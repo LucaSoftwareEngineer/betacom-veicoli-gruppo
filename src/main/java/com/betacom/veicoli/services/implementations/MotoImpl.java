@@ -8,11 +8,9 @@ import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
 import com.betacom.veicoli.dto.request.MotoRequest;
-import com.betacom.veicoli.dto.response.MacchinaResponse;
 import com.betacom.veicoli.dto.response.MotoResponse;
 import com.betacom.veicoli.dto.response.ResponseDTO;
 import com.betacom.veicoli.exceptions.VeicoliException;
-import com.betacom.veicoli.models.Macchina;
 import com.betacom.veicoli.models.Moto;
 import com.betacom.veicoli.models.tipi.Categoria;
 import com.betacom.veicoli.models.tipi.TipoAlimentazione;
@@ -20,7 +18,6 @@ import com.betacom.veicoli.models.tipi.TipoVeicolo;
 import com.betacom.veicoli.repositories.CategoriaRepository;
 import com.betacom.veicoli.repositories.MotoRepository;
 import com.betacom.veicoli.repositories.TipoAlimentazioneRepository;
-import com.betacom.veicoli.repositories.TipoFrenoRepository;
 import com.betacom.veicoli.repositories.TipoVeicoloRepository;
 import com.betacom.veicoli.services.interfaces.IMotoServices;
 
@@ -62,9 +59,18 @@ public class MotoImpl implements IMotoServices {
 		
 		Moto moto = modelMapper.map(req, Moto.class);
 		moto.setId(null);
+		moto.setTipoVeicolo(tipoVeicolo);
+		moto.setCategoria(categoria);
+		moto.setTipoAlimentazione(tipoAlimentazione);
 		motoRepository.save(moto);
 		
-		return modelMapper.map(moto, MotoResponse.class);
+		MotoResponse res = modelMapper.map(moto, MotoResponse.class);
+
+		res.setTipoVeicoloDesc(moto.getTipoVeicolo().getDescrizione());
+		res.setCategoriaDesc(moto.getCategoria().getDescrizione());
+		res.setTipoAlimentazioneDesc(moto.getTipoAlimentazione().getDescrizione());
+
+		return res;
 	}
 
 	@Override
@@ -73,14 +79,12 @@ public class MotoImpl implements IMotoServices {
 		Moto moto = motoRepository.findById(id)
 				.orElseThrow(() -> new VeicoliException("veicolo.id.invalid"));
 		
-		if(req.getTarga() != null) {
-			if(motoRepository.existsByTarga(req.getTarga()))
-		        throw new VeicoliException("moto.targa.exists");
-			if(moto.getTarga().equals(req.getTarga())) {
-				req.setTarga(moto.getTarga());
-			}else {
-		    moto.setTarga(req.getTarga());
-			}
+		if(req.getTarga() != null && !req.getTarga().isBlank()) {
+		    if(!req.getTarga().equals(moto.getTarga())) {
+		        if(motoRepository.existsByTarga(req.getTarga()))
+		            throw new VeicoliException("moto.targa.exists");
+		        moto.setTarga(req.getTarga());
+		    }
 		}
 		
 		if(req.getCilindrata() != null) {
@@ -152,7 +156,14 @@ public class MotoImpl implements IMotoServices {
 		}
 
 		motoRepository.save(moto);
-		return modelMapper.map(moto, MotoResponse.class);
+		
+		MotoResponse res = modelMapper.map(moto, MotoResponse.class);
+
+		res.setTipoVeicoloDesc(moto.getTipoVeicolo().getDescrizione());
+		res.setCategoriaDesc(moto.getCategoria().getDescrizione());
+		res.setTipoAlimentazioneDesc(moto.getTipoAlimentazione().getDescrizione());
+
+		return res;
 	}
 
 	@Override

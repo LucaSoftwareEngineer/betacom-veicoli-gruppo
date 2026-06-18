@@ -22,7 +22,6 @@ import com.betacom.veicoli.exceptions.VeicoliException;
 import com.betacom.veicoli.services.interfaces.IMacchinaServices;
 
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 
