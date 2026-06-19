@@ -11,6 +11,7 @@ import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.betacom.veicoli.components.VwVeicoloViewModelToDto;
 import com.betacom.veicoli.dto.request.VwComplessivoVeicoliRequest;
 import com.betacom.veicoli.dto.response.BiciResponse;
 import com.betacom.veicoli.dto.response.MotoResponse;
@@ -41,10 +42,7 @@ public class VeicoloImpl implements IVeicoloServices {
 
 	private final ModelMapper modelMapper;
 	private final VwComplessivoVeicoliRepository vwVeicoliRepository;
-	private final TipoFrenoRepository tipoFrenoRepository;
-	private final TipoSospensioneRepository tipoSospensioneRepository;
-	private final TipoAlimentazioneRepository tipoAlimentazioneRepository;
-	private final TipoVeicoloRepository tipoVeicoloRepository;
+	private final VwVeicoloViewModelToDto vwVeicoloViewModelToDto;
 
 	@Override
 	public List<VwComplessivoVeicoliResponse> search(VwComplessivoVeicoliRequest request) {
@@ -54,38 +52,7 @@ public class VeicoloImpl implements IVeicoloServices {
 		List<VwComplessivoVeicoliViewModel> veicoliViewModel = modelMapper.map(veicoli, new TypeToken<List<VwComplessivoVeicoliViewModel>>() {}.getType());
 		List<VwComplessivoVeicoliResponse> veicoliResponse = modelMapper.map(veicoliViewModel, new TypeToken<List<VwComplessivoVeicoliResponse>>() {}.getType());
 		
-		for (int i=0; i<veicoliViewModel.size(); i++) {
-			VwComplessivoVeicoliViewModel veicoloViewModel = veicoliViewModel.get(i);
-			VwComplessivoVeicoliResponse veicoloResponse = veicoliResponse.get(i);
-			
-			if (veicoloViewModel.getTipoFreno() != null) {
-				Integer idTipoFreno = Integer.valueOf(veicoloViewModel.getTipoFreno().toString());
-				TipoFreno tipoFreno = tipoFrenoRepository.findById(idTipoFreno).get();
-				TipoFrenoResponse tipoFrenoResponse = modelMapper.map(tipoFreno, TipoFrenoResponse.class);
-				veicoloResponse.setTipoFreno(tipoFrenoResponse);
-			}
-			
-			if (veicoloViewModel.getTipoSospensione() != null) {
-				Integer idTipoSospensione = Integer.valueOf(veicoloViewModel.getTipoSospensione().toString());
-				TipoSospensione tipoSospensione = tipoSospensioneRepository.findById(idTipoSospensione).get();
-				TipoSospensioneResponse tipoSospensioneResponse = modelMapper.map(tipoSospensione, TipoSospensioneResponse.class);
-				veicoloResponse.setTipoSospensione(tipoSospensioneResponse);
-			}
-			
-			if (veicoloViewModel.getTipoAlimentazione() != null) {
-				Integer idTipoAlimentazione = Integer.valueOf(veicoloViewModel.getTipoAlimentazione().toString());
-				TipoAlimentazione tipoAlimentazione = tipoAlimentazioneRepository.findById(idTipoAlimentazione).get();
-				TipoAlimentazioneResponse tipoAlimentazioneResponse = modelMapper.map(tipoAlimentazione, TipoAlimentazioneResponse.class);
-				veicoloResponse.setTipoAlimentazione(tipoAlimentazioneResponse);
-			}
-			
-			if (veicoloViewModel.getTipoVeicolo() != null) {
-				Integer idTipoVeicolo = Integer.valueOf(veicoloViewModel.getTipoVeicolo().toString());
-				TipoVeicolo tipoVeicolo = tipoVeicoloRepository.findById(idTipoVeicolo).get();
-				TipoVeicoloResponse tipoVeicoloResponse = modelMapper.map(tipoVeicolo, TipoVeicoloResponse.class);
-				veicoloResponse.setTipoVeicolo(tipoVeicoloResponse);
-			}
-		}
+		veicoliResponse = vwVeicoloViewModelToDto.execute(veicoliViewModel, veicoliResponse);
 		
 		return veicoliResponse;
 	}
