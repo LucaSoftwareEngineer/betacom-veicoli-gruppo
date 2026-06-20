@@ -10,6 +10,7 @@ import com.betacom.veicoli.dto.response.tipi.TipoAlimentazioneResponse;
 import com.betacom.veicoli.dto.response.tipi.TipoFrenoResponse;
 import com.betacom.veicoli.dto.response.tipi.TipoSospensioneResponse;
 import com.betacom.veicoli.dto.response.tipi.TipoVeicoloResponse;
+import com.betacom.veicoli.models.VwComplessivoVeicoli;
 import com.betacom.veicoli.models.tipi.TipoAlimentazione;
 import com.betacom.veicoli.models.tipi.TipoFreno;
 import com.betacom.veicoli.models.tipi.TipoSospensione;
@@ -18,7 +19,6 @@ import com.betacom.veicoli.repositories.TipoAlimentazioneRepository;
 import com.betacom.veicoli.repositories.TipoFrenoRepository;
 import com.betacom.veicoli.repositories.TipoSospensioneRepository;
 import com.betacom.veicoli.repositories.TipoVeicoloRepository;
-import com.betacom.veicoli.viewmodels.VwComplessivoVeicoliViewModel;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class VwVeicoloViewModelToDto {
+public class VwComplessivoVeicoliModelToDto {
 	
 	private final TipoFrenoRepository tipoFrenoRepository;
 	private final TipoSospensioneRepository tipoSospensioneRepository;
@@ -34,9 +34,9 @@ public class VwVeicoloViewModelToDto {
 	private final TipoVeicoloRepository tipoVeicoloRepository;
 	private final ModelMapper modelMapper;
 	
-	public List<VwComplessivoVeicoliResponse> execute(List<VwComplessivoVeicoliViewModel> veicoliViewModel, List<VwComplessivoVeicoliResponse> veicoliResponse) {
+	public List<VwComplessivoVeicoliResponse> execute(List<VwComplessivoVeicoli> veicoliViewModel, List<VwComplessivoVeicoliResponse> veicoliResponse) {
 		for (int i = 0; i < veicoliViewModel.size(); i++) {
-			VwComplessivoVeicoliViewModel veicoloViewModel = veicoliViewModel.get(i);
+			VwComplessivoVeicoli veicoloViewModel = veicoliViewModel.get(i);
 			VwComplessivoVeicoliResponse veicoloResponse = veicoliResponse.get(i);
 
 			if (veicoloViewModel.getTipoFreno() != null) {
