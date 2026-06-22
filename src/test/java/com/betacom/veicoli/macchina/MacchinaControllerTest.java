@@ -1,5 +1,6 @@
 package com.betacom.veicoli.macchina;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -103,8 +104,16 @@ public class MacchinaControllerTest {
 	
 	@Test
 	@Order(4)
-	public void findByIdTest() {
+	public void findByIdTest() throws Exception {
+		MvcResult result = mockMvc.perform(get("/api/macchina/list/1"))
+				.andExpect(status().isOk())
+				.andReturn();
 		
+		String json = result.getResponse().getContentAsString();
+		
+		MacchinaResponse response = objectMapper.readValue(json, MacchinaResponse.class);
+		
+		assertEquals(response.getId(), 1);
 	}
 	
 	@Test
