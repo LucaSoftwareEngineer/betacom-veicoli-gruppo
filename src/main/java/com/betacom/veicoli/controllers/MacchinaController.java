@@ -73,7 +73,7 @@ public class MacchinaController {
             tags = {"Macchina"}
     )
     @GetMapping("/list/{id}")
-    public ResponseEntity<MacchinaResponse> findById(@Min(value = 1, message = "id deve essere un numero intero maggiore di 0") Integer id) throws VeicoliException{
+    public ResponseEntity<MacchinaResponse> findById(@PathVariable @Min(value = 1, message = "id deve essere un numero intero maggiore di 0") Integer id) throws VeicoliException{
         return new ResponseEntity<>(iMacchinaServices.findById(id), HttpStatus.OK);
     }
 	
