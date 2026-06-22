@@ -2,6 +2,7 @@ package com.betacom.veicoli.macchina;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -118,8 +119,10 @@ public class MacchinaControllerTest {
 	
 	@Test
 	@Order(5)
-	public void remove() {
-		
+	public void remove() throws Exception {
+		MvcResult result = mockMvc.perform(delete("/api/macchina/delete/1"))
+				.andExpect(status().isOk())
+				.andReturn();
 	}
 	
 }
