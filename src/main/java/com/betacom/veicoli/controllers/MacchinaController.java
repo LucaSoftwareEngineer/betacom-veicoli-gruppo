@@ -83,7 +83,7 @@ public class MacchinaController {
             tags = {"Macchina"}
     )
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ResponseDTO> remove(@Min(value = 1, message = "id deve essere un numero intero maggiore di 0") Integer id) throws VeicoliException{
+    public ResponseEntity<ResponseDTO> remove(@PathVariable @Min(value = 1, message = "id deve essere un numero intero maggiore di 0") Integer id) throws VeicoliException{
         return new ResponseEntity<>(iMacchinaServices.remove(id), HttpStatus.OK);
     }
 
