@@ -90,7 +90,15 @@ public class MacchinaControllerTest {
 	@Test
 	@Order(3)
 	public void getAllTest() throws Exception {
+		MvcResult result = mockMvc.perform(get("/api/macchina/list"))
+				.andExpect(status().isOk())
+				.andReturn();
 		
+		String json = result.getResponse().getContentAsString();
+		
+		List<MacchinaResponse> response = objectMapper.readValue(json, new TypeReference<List<MacchinaResponse>>() {}); 
+	
+		assertFalse(response.isEmpty());
 	}
 	
 	@Test
