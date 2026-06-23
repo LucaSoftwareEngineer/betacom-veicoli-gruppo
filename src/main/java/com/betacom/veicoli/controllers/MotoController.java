@@ -76,7 +76,7 @@ private final IMotoServices iMotoServices;
             tags = {"Moto"}
     )
     @GetMapping("/list/{id}")
-    public ResponseEntity<MotoResponse> findById(@Min(value = 1, message = "id deve essere un numero intero maggiore di 0") Integer id) throws VeicoliException{
+    public ResponseEntity<MotoResponse> findById(@PathVariable @Min(value = 1, message = "id deve essere un numero intero maggiore di 0") Integer id) throws VeicoliException{
         return new ResponseEntity<>(iMotoServices.findById(id), HttpStatus.OK);
     }
 	
@@ -86,7 +86,7 @@ private final IMotoServices iMotoServices;
             tags = {"Moto"}
     )
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ResponseDTO> remove(@Min(value = 1, message = "id deve essere un numero intero maggiore di 0") Integer id) throws VeicoliException{
+    public ResponseEntity<ResponseDTO> remove(@PathVariable @Min(value = 1, message = "id deve essere un numero intero maggiore di 0") Integer id) throws VeicoliException{
         return new ResponseEntity<>(iMotoServices.remove(id), HttpStatus.OK);
     }
 }
