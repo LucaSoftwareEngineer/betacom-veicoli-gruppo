@@ -57,7 +57,7 @@ public class VeicoloControllerTest {
 	}
 
 	@Mock
-	private VwComplessivoVeicoliModelToDto vwComplessivoVeicoliModelToDto; // stesso nome del campo in VeicoloImpl
+	private VwComplessivoVeicoliModelToDto vwComplessivoVeicoliModelToDto;
 
 	@Test
 	public void search() {
@@ -77,7 +77,6 @@ public class VeicoloControllerTest {
 
 		List<VwComplessivoVeicoliResponse> result = veicoloImpl.search(req);
 
-		System.err.println(result.getFirst());
 		assertFalse(result.isEmpty());
 	}
 
