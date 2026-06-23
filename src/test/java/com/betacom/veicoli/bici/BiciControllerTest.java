@@ -185,5 +185,14 @@ public class BiciControllerTest {
 				.andExpect(status().isBadRequest())
 				.andReturn();
 	}
+	
+	@Test
+	@Order(9)
+	public void removeTestError() throws Exception {
+		MvcResult result = mockMvc.perform(delete("/api/bici/remove/99"))
+				.andExpect(status().isBadRequest())
+				.andReturn();
+	}
+	
 }
 
