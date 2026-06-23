@@ -126,7 +126,7 @@ public class MacchinaControllerTest {
 	}
 	
 	@Test
-	@Order(5)
+	@Order(6)
 	public void createTestError() throws Exception {
 		
 		MacchinaRequest req = new MacchinaRequest();
@@ -144,6 +144,30 @@ public class MacchinaControllerTest {
 		
 		MvcResult result = mockMvc.perform(
 					post("/api/macchina/")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(req))
+				).andExpect(status().isBadRequest())
+				.andReturn();
+	}
+	
+	@Test
+	@Order(7)
+	public void updateTestError() throws Exception {
+		MacchinaRequest req = new MacchinaRequest();
+		req.setTarga("AA12BB");
+		req.setCilindrata((short) 500);
+		req.setNumeroPorte((short) 5);
+		req.setTipoVeicoloId(1);
+		req.setNumeroRuote((short) 4);
+		req.setTipoAlimentazioneId(1);
+		req.setCategoriaId(1);
+		req.setColore("rosso");
+		req.setMarca("Ferrari");
+		req.setAnnoProduzione(Year.of(2024));
+		req.setModello("Testa Rossa 11");
+		
+		MvcResult result = mockMvc.perform(
+					put("/api/macchina/1")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(req))
 				).andExpect(status().isBadRequest())
