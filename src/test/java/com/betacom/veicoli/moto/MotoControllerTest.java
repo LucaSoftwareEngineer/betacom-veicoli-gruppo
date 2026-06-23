@@ -123,4 +123,67 @@ public class MotoControllerTest {
 				.andReturn();
 	}
 	
+	@Test
+	@Order(6)
+	public void createTestError() throws Exception {
+		
+		MotoRequest req = new MotoRequest();
+		req.setTarga("AA1BB");
+		req.setCilindrata((short) 125);
+		req.setTipoVeicoloId(2);
+		req.setNumeroRuote((short) 2);
+		req.setTipoAlimentazioneId(1);
+		req.setCategoriaId(1);
+		req.setColore("nero");
+		req.setMarca("Honda");
+		req.setAnnoProduzione(Year.of(2014));
+		req.setModello("Super Mega Moto");
+		
+		MvcResult result = mockMvc.perform(
+					post("/api/moto/")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(req))
+				).andExpect(status().isBadRequest())
+				.andReturn();
+	}
+	
+	@Test
+	@Order(7)
+	public void updateTestError() throws Exception {
+		MotoRequest req = new MotoRequest();
+		req.setTarga("AA1BB");
+		req.setCilindrata((short) 125);
+		req.setTipoVeicoloId(2);
+		req.setNumeroRuote((short) 2);
+		req.setTipoAlimentazioneId(1);
+		req.setCategoriaId(1);
+		req.setColore("nero");
+		req.setMarca("Honda");
+		req.setAnnoProduzione(Year.of(2014));
+		req.setModello("Super Mega Moto");
+		
+		MvcResult result = mockMvc.perform(
+					put("/api/moto/3")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(req))
+				).andExpect(status().isBadRequest())
+				.andReturn();
+	}
+	
+	@Test
+	@Order(8)
+	public void findByIdTestError() throws Exception {
+		MvcResult result = mockMvc.perform(get("/api/moto/list/99"))
+				.andExpect(status().isBadRequest())
+				.andReturn();
+	}
+	
+	@Test
+	@Order(9)
+	public void removeTestError() throws Exception {
+		MvcResult result = mockMvc.perform(delete("/api/moto/delete/99"))
+				.andExpect(status().isBadRequest())
+				.andReturn();
+	}
+
 }
