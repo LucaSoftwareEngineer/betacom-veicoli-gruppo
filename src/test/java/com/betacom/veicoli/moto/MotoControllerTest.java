@@ -22,9 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import com.betacom.veicoli.dto.request.MacchinaRequest;
 import com.betacom.veicoli.dto.request.MotoRequest;
-import com.betacom.veicoli.dto.response.MacchinaResponse;
 import com.betacom.veicoli.dto.response.MotoResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -120,6 +118,9 @@ public class MotoControllerTest {
 	@Test
 	@Order(5)
 	public void remove() throws Exception {
+		MvcResult result = mockMvc.perform(delete("/api/moto/delete/3"))
+				.andExpect(status().isOk())
+				.andReturn();
 	}
 	
 }
