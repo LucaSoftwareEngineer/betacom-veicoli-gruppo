@@ -119,7 +119,7 @@ public class MacchinaControllerTest {
 	
 	@Test
 	@Order(5)
-	public void remove() throws Exception {
+	public void removeTest() throws Exception {
 		MvcResult result = mockMvc.perform(delete("/api/macchina/delete/1"))
 				.andExpect(status().isOk())
 				.andReturn();
@@ -173,4 +173,14 @@ public class MacchinaControllerTest {
 				).andExpect(status().isBadRequest())
 				.andReturn();
 	}
+	
+	@Test
+	@Order(8)
+	public void findByIdTestError() throws Exception {
+		MvcResult result = mockMvc.perform(get("/api/macchina/list/99"))
+				.andExpect(status().isBadRequest())
+				.andReturn();
+	}
+	
+
 }
