@@ -125,4 +125,28 @@ public class MacchinaControllerTest {
 				.andReturn();
 	}
 	
+	@Test
+	@Order(5)
+	public void createTestError() throws Exception {
+		
+		MacchinaRequest req = new MacchinaRequest();
+		req.setTarga("AA11BB");
+		req.setCilindrata((short) 500);
+		req.setNumeroPorte((short) 5);
+		req.setTipoVeicoloId(1);
+		req.setNumeroRuote((short) 4);
+		req.setTipoAlimentazioneId(1);
+		req.setCategoriaId(1);
+		req.setColore("rosso");
+		req.setMarca("Ferrari");
+		req.setAnnoProduzione(Year.of(2024));
+		req.setModello("Testa Rossa");
+		
+		MvcResult result = mockMvc.perform(
+					post("/api/macchina/")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(req))
+				).andExpect(status().isBadRequest())
+				.andReturn();
+	}
 }
