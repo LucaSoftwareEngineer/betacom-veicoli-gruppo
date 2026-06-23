@@ -1,6 +1,7 @@
 package com.betacom.veicoli.bici;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.Year;
@@ -61,7 +62,26 @@ public class BiciControllerTest {
 	@Test
 	@Order(2)
 	public void updateTest() throws Exception {
-
+		BiciRequest req = new BiciRequest();
+		req.setNumeroMarce((short) 3);
+		req.setTipoFrenoId(1);
+		req.setTipoSospensioneId(2);
+		req.setPieghevole(true);
+		req.setTipoVeicoloId(3);
+		req.setNumeroRuote((short) 2);
+		req.setTipoAlimentazioneId(4);
+		req.setCategoriaId(1);
+		req.setColore("rosso");
+		req.setMarca("Super");
+		req.setAnnoProduzione(Year.of(2020));
+		req.setModello("Mega Bici");
+		
+		MvcResult result = mockMvc.perform(
+					put("/api/bici/update/2")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(req))
+				).andExpect(status().isOk())
+				.andReturn();
 	}
 
 	@Test
