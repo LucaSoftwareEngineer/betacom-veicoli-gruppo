@@ -1,10 +1,14 @@
 package com.betacom.veicoli.bici;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.Year;
+import java.util.List;
 
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -18,9 +22,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import com.betacom.veicoli.dto.request.BiciRequest;
+import com.betacom.veicoli.dto.response.BiciResponse;
+import com.betacom.veicoli.dto.response.MacchinaResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
 @Slf4j
@@ -87,13 +94,21 @@ public class BiciControllerTest {
 	@Test
 	@Order(3)
 	public void getAllTest() throws Exception {
-
+		MvcResult result = mockMvc.perform(get("/api/bici/list"))
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		String json = result.getResponse().getContentAsString();
+		
+		List<BiciResponse> response = objectMapper.readValue(json, new TypeReference<List<BiciResponse>>() {}); 
+	
+		assertFalse(response.isEmpty());
 	}
 
 	@Test
 	@Order(4)
 	public void findByIdTest() throws Exception {
-
+		
 	}
 
 	@Test
