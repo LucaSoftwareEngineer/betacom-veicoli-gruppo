@@ -108,7 +108,15 @@ public class BiciControllerTest {
 	@Test
 	@Order(4)
 	public void findByIdTest() throws Exception {
+		MvcResult result = mockMvc.perform(get("/api/bici/list/2"))
+				.andExpect(status().isOk())
+				.andReturn();
 		
+		String json = result.getResponse().getContentAsString();
+		
+		BiciResponse response = objectMapper.readValue(json, BiciResponse.class);
+		
+		assertEquals(response.getId(), 2);
 	}
 
 	@Test
