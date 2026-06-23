@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import com.betacom.veicoli.dto.request.MacchinaRequest;
 import com.betacom.veicoli.dto.request.MotoRequest;
 import com.betacom.veicoli.dto.response.MacchinaResponse;
+import com.betacom.veicoli.dto.response.MotoResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -91,7 +92,15 @@ public class MotoControllerTest {
 	@Test
 	@Order(3)
 	public void getAllTest() throws Exception {
+		MvcResult result = mockMvc.perform(get("/api/moto/list"))
+				.andExpect(status().isOk())
+				.andReturn();
 		
+		String json = result.getResponse().getContentAsString();
+		
+		List<MotoResponse> response = objectMapper.readValue(json, new TypeReference<List<MotoResponse>>() {}); 
+	
+		assertFalse(response.isEmpty());
 	}
 	
 	@Test
