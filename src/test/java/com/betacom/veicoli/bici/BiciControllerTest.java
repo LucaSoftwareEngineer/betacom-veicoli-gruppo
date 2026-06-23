@@ -2,6 +2,7 @@ package com.betacom.veicoli.bici;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -23,7 +24,6 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import com.betacom.veicoli.dto.request.BiciRequest;
 import com.betacom.veicoli.dto.response.BiciResponse;
-import com.betacom.veicoli.dto.response.MacchinaResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -122,6 +122,8 @@ public class BiciControllerTest {
 	@Test
 	@Order(5)
 	public void removeTest() throws Exception {
-
+		MvcResult result = mockMvc.perform(delete("/api/bici/remove/2"))
+				.andExpect(status().isOk())
+				.andReturn();
 	}
 }
