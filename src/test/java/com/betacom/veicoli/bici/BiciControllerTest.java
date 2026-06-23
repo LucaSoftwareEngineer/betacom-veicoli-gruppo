@@ -126,4 +126,30 @@ public class BiciControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 	}
+	
+	@Test
+	@Order(6)
+	public void createTestError() throws Exception {
+		
+		BiciRequest req = new BiciRequest();
+		req.setNumeroMarce((short) 3);
+		req.setTipoFrenoId(1);
+		req.setTipoSospensioneId(10);
+		req.setPieghevole(true);
+		req.setTipoVeicoloId(3);
+		req.setNumeroRuote((short) 2);
+		req.setTipoAlimentazioneId(4);
+		req.setCategoriaId(1);
+		req.setColore("rosso");
+		req.setMarca("Super");
+		req.setAnnoProduzione(Year.of(2020));
+		req.setModello("Mega Bici");
+		
+		MvcResult result = mockMvc.perform(
+					post("/api/bici/")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(req))
+				).andExpect(status().isBadRequest())
+				.andReturn();
+	}
 }
