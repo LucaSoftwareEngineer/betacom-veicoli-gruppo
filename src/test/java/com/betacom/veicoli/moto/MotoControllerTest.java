@@ -169,5 +169,15 @@ public class MotoControllerTest {
 				).andExpect(status().isBadRequest())
 				.andReturn();
 	}
+	
+	@Test
+	@Order(8)
+	public void findByIdTestError() throws Exception {
+		MvcResult result = mockMvc.perform(get("/api/moto/list/99"))
+				.andExpect(status().isBadRequest())
+				.andReturn();
+	}
+	
+	
 
 }
