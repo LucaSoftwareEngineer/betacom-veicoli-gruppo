@@ -106,7 +106,15 @@ public class MotoControllerTest {
 	@Test
 	@Order(4)
 	public void findByIdTest() throws Exception {
+		MvcResult result = mockMvc.perform(get("/api/moto/list/3"))
+				.andExpect(status().isOk())
+				.andReturn();
 		
+		String json = result.getResponse().getContentAsString();
+		
+		MotoResponse response = objectMapper.readValue(json, MotoResponse.class);
+		
+		assertEquals(response.getId(), 3);
 	}
 	
 	@Test
