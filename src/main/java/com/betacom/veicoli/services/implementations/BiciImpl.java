@@ -125,7 +125,7 @@ public class BiciImpl implements IBiciServices {
 		}
 		
 		if (request.getTipoAlimentazioneId() != null) {
-			TipoAlimentazione tipoAlimentazione = tipoAlimentazioneRepository.findById(request.getTipoSospensioneId()).orElseThrow(() -> new VeicoliException("bici.tipo.alim.invalid"));
+			TipoAlimentazione tipoAlimentazione = tipoAlimentazioneRepository.findById(request.getTipoAlimentazioneId()).orElseThrow(() -> new VeicoliException("bici.tipo.alim.invalid"));
 			if(!tipoAlimentazione.getDescrizione().equalsIgnoreCase("MANUALE") && !tipoAlimentazione.getDescrizione().equalsIgnoreCase("ELETTRICO"))
 				throw new VeicoliException("veicolo.tipo.alim.invalid");
 			bici.setTipoAlimentazione(tipoAlimentazione);

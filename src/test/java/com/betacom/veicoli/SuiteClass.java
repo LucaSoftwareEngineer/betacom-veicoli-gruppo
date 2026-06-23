@@ -11,8 +11,8 @@ import com.betacom.veicoli.veicolo.VeicoloControllerTest;
 @Suite
 @SelectClasses({
 	MacchinaControllerTest.class,
-	MotoControllerTest.class,
 	BiciControllerTest.class,
+	MotoControllerTest.class,
 	VeicoloControllerTest.class
 })
 public class SuiteClass {
