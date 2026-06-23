@@ -178,6 +178,12 @@ public class MotoControllerTest {
 				.andReturn();
 	}
 	
-	
+	@Test
+	@Order(9)
+	public void removeTestError() throws Exception {
+		MvcResult result = mockMvc.perform(delete("/api/moto/delete/99"))
+				.andExpect(status().isBadRequest())
+				.andReturn();
+	}
 
 }
